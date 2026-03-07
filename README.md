@@ -4,7 +4,7 @@
 
 **3d-shop-visualizer** is a high-performance web application demonstrating a modern approach to e-commerce interfaces. It combines **Real-time 3D Rendering (WebGL)** with a **Local-First Data Layer (SQLite-WASM)** to provide a seamless, low-latency user experience without the need for a traditional backend.
 
-This project was developed for the *Technologies for web applications* course, focusing on modularity, clean architecture, and the synergy between WebAssembly and modern frontend frameworks.
+This project was developed for the _Technologies for web applications_ course, focusing on modularity, clean architecture, and the synergy between WebAssembly and modern frontend frameworks.
 
 ---
 
@@ -48,7 +48,16 @@ src/
 └── utils/              # Helper functions (formatters, constants)
 ```
 
+## 💎 Code Quality & Development Workflow
+
+To maintain high professional standards, the project implements:
+
+- Conventional Commits: Enforced via @commitlint to ensure a readable and structured git history.
+- Git Hooks: Managed by Husky to run linters and formatters before every commit.
+- Automated Linting: ESLint and Prettier (with lint-staged) to guarantee code consistency and prevent errors.
+
 ### The Data Layer (Local-First SQL)
+
 The application leverages **SQLite compiled to WebAssembly**. Upon initialization, the database is seeded with product metadata. When a user selects a configuration (e.g., color or material), the application executes an optimized SQL query to fetch the corresponding texture paths and price adjustments, decoupling the UI from the raw data source.
 
 ---
@@ -56,10 +65,12 @@ The application leverages **SQLite compiled to WebAssembly**. Upon initializatio
 ## 🛠 Development & Deployment
 
 ### Prerequisites
+
 - Node.js (v18+)
 - pnpm or npm
 
 ### Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/lorenzomaiuri-dev/3d-shop-visualizer.git
@@ -68,5 +79,16 @@ git clone https://github.com/lorenzomaiuri-dev/3d-shop-visualizer.git
 pnpm install # or npm install
 
 # Start development server
-pnpm dev # or npm dev
+pnpm dev # or npm run dev
+```
+
+### Build & Deploy
+
+```bash
+# Production build
+pnpm build # or npm run build
+
+# Linting & Formatting
+pnpm lint # or npm run lint
+pnpm format # or npm run format
 ```
