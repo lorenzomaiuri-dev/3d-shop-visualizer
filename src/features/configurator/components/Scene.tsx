@@ -7,6 +7,7 @@ import {
 } from '@react-three/drei'
 import { useConfiguratorStore } from '../../../store/useConfiguratorStore'
 import { Suspense } from 'react'
+import { Badge } from '@/components/ui/badge'
 
 const ProductPlaceholder = () => {
   const selectedVariant = useConfiguratorStore((state) => state.selectedVariant)
@@ -31,7 +32,13 @@ const ProductPlaceholder = () => {
 
 const Scene = () => {
   return (
-    <div className="h-[400px] w-full overflow-hidden rounded-2xl bg-slate-50 shadow-inner">
+    <div className="relative">
+      <div className="absolute top-4 left-4">
+        <Badge variant="secondary" className="bg-white/80">
+          Rotate the product to view it from different angles!
+        </Badge>
+      </div>
+
       <Canvas shadows camera={{ position: [0, 0, 5], fov: 45 }}>
         <Suspense fallback={null}>
           <Stage environment="city" intensity={0.5}>
