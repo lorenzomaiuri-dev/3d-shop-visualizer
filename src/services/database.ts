@@ -7,7 +7,12 @@ export const initDatabase = async () => {
   if (db) return db
 
   const SQL = await initSqlJs({
-    locateFile: (file) => `${import.meta.env.BASE_URL}${file}`,
+    locateFile: (file) => {
+      const baseUrl = import.meta.env.BASE_URL || '/'
+      const path = `${baseUrl}${file}`.replace(/\/+/g, '/')
+      console.log('Locating WASM:', path)
+      return path
+    },
   })
 
   db = new SQL.Database()
