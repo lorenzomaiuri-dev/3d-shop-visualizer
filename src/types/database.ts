@@ -3,6 +3,7 @@ export interface Product {
   name: string
   base_price: number
   description: string
+  model_path: string
 }
 
 export interface Variant {
@@ -11,4 +12,5 @@ export interface Variant {
   name: string
   color: string
   price_modifier: number
+  target_mesh: string
 }
