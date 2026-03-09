@@ -33,27 +33,42 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
     }
 
     try {
-      // TODO: HANDLE INIT DATA BETTER
-      const productStmt = db.prepare('SELECT * FROM products LIMIT 1')
-      const product = productStmt.getAsObject() as unknown as Product
-      productStmt.free()
+      // TODO: REFACTOR TO USE PARAMETRIZED QUERIES WITH PREPARED STATEMENTS WITH REPOSITORY PATTERN
+      const productRes = db.exec('SELECT * FROM products LIMIT 1')
 
-      console.log('Fetched product:', product)
-
-      if (!product || !product.id) {
+      if (
+        !productRes ||
+        productRes.length === 0 ||
+        productRes[0].values.length === 0
+      ) {
         throw new Error('No products found in database')
       }
 
-      // Get all variants for this product
-      const variantsStmt = db.prepare(
-        'SELECT * FROM variants WHERE product_id = :pid',
+      const cols = productRes[0].columns
+      const vals = productRes[0].values[0]
+      const product = cols.reduce(
+        (acc, col, i) => ({ ...acc, [col]: vals[i] }),
+        {},
+      ) as Product
+
+      console.log('Mapped product:', product)
+
+      // Get all variants
+      const variantsRes = db.exec(
+        `SELECT * FROM variants WHERE product_id = ${product.id}`,
       )
       const variants: Variant[] = []
-      variantsStmt.bind({ ':pid': product.id })
-      while (variantsStmt.step()) {
-        variants.push(variantsStmt.getAsObject() as unknown as Variant)
+
+      if (variantsRes && variantsRes.length > 0) {
+        const vCols = variantsRes[0].columns
+        variantsRes[0].values.forEach((vVals) => {
+          const variant = vCols.reduce(
+            (acc, col, i) => ({ ...acc, [col]: vVals[i] }),
+            {},
+          ) as Variant
+          variants.push(variant)
+        })
       }
-      variantsStmt.free()
 
       const selectedVariant = variants[0] || null
       const price = product.base_price + (selectedVariant?.price_modifier || 0)
@@ -66,6 +81,7 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
         isLoading: false,
       })
     } catch (err) {
+      console.error('Store fetch error:', err)
       set({ error: (err as Error).message, isLoading: false })
     }
   },
