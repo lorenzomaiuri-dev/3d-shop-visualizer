@@ -6,7 +6,11 @@ import * as THREE from 'three'
 export function ConfigurableModel() {
   const { product, selectedVariant } = useConfiguratorStore()
 
-  const { scene } = useGLTF(product?.model_path || '')
+  const modelPath = product?.model_path
+    ? `${import.meta.env.BASE_URL}${product.model_path}`.replace(/\/+/g, '/')
+    : ''
+
+  const { scene } = useGLTF(modelPath)
 
   useEffect(() => {
     if (!scene || !selectedVariant) return
