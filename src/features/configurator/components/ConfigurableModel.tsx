@@ -11,10 +11,13 @@ export function ConfigurableModel() {
   useEffect(() => {
     if (!scene || !selectedVariant) return
 
-    scene.traverse((child: THREE.Mesh) => {
+    scene.traverse((child: THREE.Object3D) => {
       if (child instanceof THREE.Mesh) {
         console.log('Mesh:', child.name)
-        if (child.name === selectedVariant.target_mesh) {
+        if (
+          child.name === selectedVariant.target_mesh &&
+          child.material instanceof THREE.MeshStandardMaterial
+        ) {
           child.material.color.set(selectedVariant.color)
         }
 

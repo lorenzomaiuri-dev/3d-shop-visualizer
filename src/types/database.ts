@@ -4,6 +4,8 @@ export interface Product {
   base_price: number
   description: string
   model_path: string
+  category: string
+  image_url: string
 }
 
 export interface Variant {
