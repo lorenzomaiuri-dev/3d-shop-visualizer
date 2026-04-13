@@ -11,7 +11,7 @@ interface ConfiguratorState {
   error: string | null
 
   // Actions
-  fetchInitialData: () => Promise<void>
+  fetchInitialData: (productId?: number) => Promise<void>
   selectVariant: (variantId: number) => void
 }
 
@@ -23,7 +23,7 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
   isLoading: false,
   error: null,
 
-  fetchInitialData: async () => {
+  fetchInitialData: async (productId?: number) => {
     set({ isLoading: true, error: null })
     const db = getDb()
 
@@ -34,7 +34,11 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
 
     try {
       // TODO: REFACTOR TO USE PARAMETRIZED QUERIES WITH PREPARED STATEMENTS WITH REPOSITORY PATTERN
-      const productRes = db.exec('SELECT * FROM products LIMIT 1')
+      const query = productId
+        ? `SELECT * FROM products WHERE id = ${productId}`
+        : 'SELECT * FROM products LIMIT 1'
+
+      const productRes = db.exec(query)
 
       if (
         !productRes ||
