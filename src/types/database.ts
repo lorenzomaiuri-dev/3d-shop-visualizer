@@ -5,7 +5,7 @@ export interface Product {
   description: string
   model_path: string
   category: string
-  image_url: string
+  thumbnail: string
 }
 
 export interface Variant {
