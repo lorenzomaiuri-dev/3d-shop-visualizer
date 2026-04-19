@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { initDatabase } from '../services/database'
 import { useConfiguratorStore } from '../store/useConfiguratorStore'
 import Scene from '../features/configurator/components/Scene'
 import { Card, CardContent } from '@/components/ui/card'
@@ -26,7 +25,7 @@ export default function ConfiguratorPage() {
 
   useEffect(() => {
     const productId = id ? parseInt(id, 10) : undefined
-    initDatabase().then(() => fetchInitialData(productId))
+    fetchInitialData(productId)
   }, [id, fetchInitialData])
 
   if (error) {
