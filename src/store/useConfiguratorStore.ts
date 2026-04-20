@@ -33,46 +33,35 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
     }
 
     try {
-      // TODO: REFACTOR TO USE PARAMETRIZED QUERIES WITH PREPARED STATEMENTS WITH REPOSITORY PATTERN
+      // TODO: REFACTOR TO REPOSITORY PATTERN
       const query = productId
-        ? `SELECT * FROM products WHERE id = ${productId}`
+        ? 'SELECT * FROM products WHERE id = $productId'
         : 'SELECT * FROM products LIMIT 1'
 
-      const productRes = db.exec(query)
-
-      if (
-        !productRes ||
-        productRes.length === 0 ||
-        productRes[0].values.length === 0
-      ) {
-        throw new Error('No products found in database')
+      const stmt = db.prepare(query)
+      if (productId) {
+        stmt.bind({ $productId: productId })
       }
 
-      const cols = productRes[0].columns
-      const vals = productRes[0].values[0]
-      const product = cols.reduce(
-        (acc, col, i) => ({ ...acc, [col]: vals[i] }),
-        {},
-      ) as Product
+      if (!stmt.step()) {
+        stmt.free()
+        throw new Error('Product not found')
+      }
 
-      console.log('Mapped product:', product)
+      const product = stmt.getAsObject() as unknown as Product
+      stmt.free()
 
-      // Get all variants
-      const variantsRes = db.exec(
-        `SELECT * FROM variants WHERE product_id = ${product.id}`,
+      // Get all variants using prepared statement
+      const vStmt = db.prepare(
+        'SELECT * FROM variants WHERE product_id = $productId',
       )
-      const variants: Variant[] = []
+      vStmt.bind({ $productId: product.id })
 
-      if (variantsRes && variantsRes.length > 0) {
-        const vCols = variantsRes[0].columns
-        variantsRes[0].values.forEach((vVals) => {
-          const variant = vCols.reduce(
-            (acc, col, i) => ({ ...acc, [col]: vVals[i] }),
-            {},
-          ) as Variant
-          variants.push(variant)
-        })
+      const variants: Variant[] = []
+      while (vStmt.step()) {
+        variants.push(vStmt.getAsObject() as unknown as Variant)
       }
+      vStmt.free()
 
       const selectedVariant = variants[0] || null
       const price = product.base_price + (selectedVariant?.price_modifier || 0)

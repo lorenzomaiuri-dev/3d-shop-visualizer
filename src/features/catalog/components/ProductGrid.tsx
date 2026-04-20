@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useProducts } from '../../../hooks/useProducts'
+import { useCategories } from '../../../hooks/useCategories'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -8,21 +9,49 @@ import { Link } from 'react-router-dom'
 
 export default function ProductGrid() {
   const [search, setSearch] = useState('')
-  const products = useProducts(search)
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const products = useProducts(search, selectedCategory)
+  const categories = useCategories()
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-4">
-        <Input
-          placeholder="Search products in SQL database..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm"
-        />
-        <Badge variant="secondary">Found {products.length} items</Badge>
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-1 items-center gap-4">
+          <Input
+            placeholder="Search products in SQL database..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="max-w-sm"
+          />
+          <Badge variant="secondary" className="shrink-0">
+            Found {products.length} items
+          </Badge>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={selectedCategory === 'All' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSelectedCategory('All')}
+            className="rounded-full"
+          >
+            All
+          </Button>
+          {categories.map((category) => (
+            <Button
+              key={category}
+              variant={selectedCategory === category ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setSelectedCategory(category)}
+              className="rounded-full"
+            >
+              {category}
+            </Button>
+          ))}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {products.map((p) => (
           <Card
             key={p.id}
@@ -52,6 +81,14 @@ export default function ProductGrid() {
           </Card>
         ))}
       </div>
+
+      {products.length === 0 && (
+        <div className="flex h-64 items-center justify-center rounded-xl border-2 border-dashed">
+          <p className="text-slate-500">
+            No products found matching your criteria.
+          </p>
+        </div>
+      )}
     </div>
   )
 }
