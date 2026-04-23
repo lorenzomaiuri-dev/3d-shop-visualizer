@@ -39,6 +39,15 @@ export const initDatabase = async () => {
       FOREIGN KEY(product_id) REFERENCES products(id)
     );
 
+    CREATE TABLE cart (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      product_id INTEGER,
+      variant_id INTEGER,
+      quantity INTEGER DEFAULT 1,
+      FOREIGN KEY(product_id) REFERENCES products(id),
+      FOREIGN KEY(variant_id) REFERENCES variants(id)
+    );
+
     INSERT INTO products VALUES (1, 'Sneakers', 120.0, 'High-performance 3D sneakers', '/models/Shoe.glb', 'Footwear', 'https://images.unsplash.com/photo-1600269452121-4f2416e55c28');
     INSERT INTO products VALUES (2, 'Watch', 499.0, 'Sapphire crystal with mechanical movement', '/models/Watch.glb', 'Accessories', 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49');
     INSERT INTO variants VALUES (1, 1, 'Classic White', '#ffffff', 0.0, 'Retopo_3DModel_mesh014');
