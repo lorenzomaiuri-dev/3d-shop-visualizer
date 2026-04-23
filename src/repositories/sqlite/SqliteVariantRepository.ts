@@ -3,7 +3,11 @@ import type { Variant } from '../../types/database'
 import type { IVariantRepository } from '../interfaces/IVariantRepository'
 
 export class SqliteVariantRepository implements IVariantRepository {
-  constructor(private db: Database) {}
+  private db: Database
+
+  constructor(db: Database) {
+    this.db = db
+  }
 
   async findByProductId(productId: number): Promise<Variant[]> {
     const stmt = this.db.prepare(

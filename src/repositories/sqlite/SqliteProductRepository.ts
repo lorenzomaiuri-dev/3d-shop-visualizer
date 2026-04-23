@@ -3,7 +3,11 @@ import type { Product, ProductFilters } from '../../types/database'
 import type { IProductRepository } from '../interfaces/IProductRepository'
 
 export class SqliteProductRepository implements IProductRepository {
-  constructor(private db: Database) {}
+  private db: Database
+
+  constructor(db: Database) {
+    this.db = db
+  }
 
   async findAll(filters?: ProductFilters): Promise<Product[]> {
     let query = 'SELECT * FROM products WHERE 1=1'

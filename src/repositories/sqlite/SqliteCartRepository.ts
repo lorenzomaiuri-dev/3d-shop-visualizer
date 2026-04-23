@@ -3,7 +3,11 @@ import type { CartItem } from '../../types/database'
 import type { ICartRepository } from '../interfaces/ICartRepository'
 
 export class SqliteCartRepository implements ICartRepository {
-  constructor(private db: Database) {}
+  private db: Database
+
+  constructor(db: Database) {
+    this.db = db
+  }
 
   async findAll(): Promise<CartItem[]> {
     const query = `
