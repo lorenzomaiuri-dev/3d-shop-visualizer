@@ -1,19 +1,17 @@
-import { getDb } from '../services/database'
+import { useEffect, useState } from 'react'
+import { getContainer } from '../services/container'
 
 export function useCategories() {
-  const db = getDb()
-  if (!db) return []
+  const [categories, setCategories] = useState<string[]>([])
 
-  const stmt = db.prepare('SELECT DISTINCT category FROM products')
-  const result: string[] = []
-
-  while (stmt.step()) {
-    const row = stmt.getAsObject()
-    if (row.category) {
-      result.push(row.category as string)
+  useEffect(() => {
+    try {
+      const { productRepository } = getContainer()
+      productRepository.getCategories().then(setCategories)
+    } catch (err) {
+      console.error('Failed to fetch categories:', err)
     }
-  }
-  stmt.free()
+  }, [])
 
-  return result
+  return categories
 }

@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { getDb } from '../services/database'
+import { getContainer } from '../services/container'
 import type { Product, Variant } from '../types/database'
 
 interface ConfiguratorState {
@@ -25,44 +25,19 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
 
   fetchInitialData: async (productId?: number) => {
     set({ isLoading: true, error: null })
-    const db = getDb()
-
-    if (!db) {
-      set({ error: 'Database not initialized', isLoading: false })
-      return
-    }
 
     try {
-      // TODO: REFACTOR TO REPOSITORY PATTERN
-      const query = productId
-        ? 'SELECT * FROM products WHERE id = $productId'
-        : 'SELECT * FROM products LIMIT 1'
+      const { productRepository, variantRepository } = getContainer()
 
-      const stmt = db.prepare(query)
-      if (productId) {
-        stmt.bind({ $productId: productId })
-      }
+      const product = productId
+        ? await productRepository.findById(productId)
+        : (await productRepository.findAll({}))[0]
 
-      if (!stmt.step()) {
-        stmt.free()
+      if (!product) {
         throw new Error('Product not found')
       }
 
-      const product = stmt.getAsObject() as unknown as Product
-      stmt.free()
-
-      // Get all variants using prepared statement
-      const vStmt = db.prepare(
-        'SELECT * FROM variants WHERE product_id = $productId',
-      )
-      vStmt.bind({ $productId: product.id })
-
-      const variants: Variant[] = []
-      while (vStmt.step()) {
-        variants.push(vStmt.getAsObject() as unknown as Variant)
-      }
-      vStmt.free()
-
+      const variants = await variantRepository.findByProductId(product.id)
       const selectedVariant = variants[0] || null
       const price = product.base_price + (selectedVariant?.price_modifier || 0)
 

@@ -1,30 +1,18 @@
-import { getDb } from '../services/database'
+import { useEffect, useState } from 'react'
+import { getContainer } from '../services/container'
 import type { Product } from '../types/database'
 
 export function useProducts(search: string = '', category: string = 'All') {
-  const db = getDb()
-  if (!db) return []
+  const [products, setProducts] = useState<Product[]>([])
 
-  let query = 'SELECT * FROM products WHERE 1=1'
-  const params: Record<string, string> = {}
+  useEffect(() => {
+    try {
+      const { productRepository } = getContainer()
+      productRepository.findAll({ search, category }).then(setProducts)
+    } catch (err) {
+      console.error('Failed to fetch products:', err)
+    }
+  }, [search, category])
 
-  if (search) {
-    query += ' AND name LIKE $search'
-    params['$search'] = `%${search}%`
-  }
-  if (category !== 'All') {
-    query += ' AND category = $category'
-    params['$category'] = category
-  }
-
-  const stmt = db.prepare(query)
-  const result: Product[] = []
-
-  stmt.bind(params)
-  while (stmt.step()) {
-    result.push(stmt.getAsObject() as unknown as Product)
-  }
-  stmt.free()
-
-  return result
+  return products
 }

@@ -16,3 +16,8 @@ export interface Variant {
   price_modifier: number
   target_mesh: string
 }
+
+export interface ProductFilters {
+  search?: string
+  category?: string
+}
