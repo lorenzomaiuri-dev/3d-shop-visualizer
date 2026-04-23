@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useConfiguratorStore } from '../store/useConfiguratorStore'
+import { useCartStore } from '../store/useCartStore'
 import Scene from '../features/configurator/components/Scene'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Separator } from '@/components/ui/separator'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, ShoppingCart } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function ConfiguratorPage() {
@@ -23,10 +24,18 @@ export default function ConfiguratorPage() {
     error,
   } = useConfiguratorStore()
 
+  const addItem = useCartStore((state) => state.addItem)
+
   useEffect(() => {
     const productId = id ? parseInt(id, 10) : undefined
     fetchInitialData(productId)
   }, [id, fetchInitialData])
+
+  const handleAddToCart = async () => {
+    if (product && selectedVariant) {
+      await addItem(product.id, selectedVariant.id)
+    }
+  }
 
   if (error) {
     return (
@@ -129,7 +138,11 @@ export default function ConfiguratorPage() {
                 </div>
               </div>
 
-              <Button className="w-full bg-blue-600 py-8 text-xl font-black shadow-xl shadow-blue-500/25 transition-all hover:bg-blue-700 active:scale-[0.98]">
+              <Button
+                onClick={handleAddToCart}
+                className="w-full gap-3 bg-blue-600 py-8 text-xl font-black shadow-xl shadow-blue-500/25 transition-all hover:bg-blue-700 active:scale-[0.98]"
+              >
+                <ShoppingCart className="h-6 w-6" />
                 Add to Cart
               </Button>
 
