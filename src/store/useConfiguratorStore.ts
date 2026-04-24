@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { getDb } from '../services/database'
+import { getContainer } from '../services/container'
 import type { Product, Variant } from '../types/database'
 
 interface ConfiguratorState {
@@ -11,7 +11,7 @@ interface ConfiguratorState {
   error: string | null
 
   // Actions
-  fetchInitialData: () => Promise<void>
+  fetchInitialData: (productId?: number) => Promise<void>
   selectVariant: (variantId: number) => void
 }
 
@@ -23,53 +23,21 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
   isLoading: false,
   error: null,
 
-  fetchInitialData: async () => {
+  fetchInitialData: async (productId?: number) => {
     set({ isLoading: true, error: null })
-    const db = getDb()
-
-    if (!db) {
-      set({ error: 'Database not initialized', isLoading: false })
-      return
-    }
 
     try {
-      // TODO: REFACTOR TO USE PARAMETRIZED QUERIES WITH PREPARED STATEMENTS WITH REPOSITORY PATTERN
-      const productRes = db.exec('SELECT * FROM products LIMIT 1')
+      const { productRepository, variantRepository } = getContainer()
 
-      if (
-        !productRes ||
-        productRes.length === 0 ||
-        productRes[0].values.length === 0
-      ) {
-        throw new Error('No products found in database')
+      const product = productId
+        ? await productRepository.findById(productId)
+        : (await productRepository.findAll({}))[0]
+
+      if (!product) {
+        throw new Error('Product not found')
       }
 
-      const cols = productRes[0].columns
-      const vals = productRes[0].values[0]
-      const product = cols.reduce(
-        (acc, col, i) => ({ ...acc, [col]: vals[i] }),
-        {},
-      ) as Product
-
-      console.log('Mapped product:', product)
-
-      // Get all variants
-      const variantsRes = db.exec(
-        `SELECT * FROM variants WHERE product_id = ${product.id}`,
-      )
-      const variants: Variant[] = []
-
-      if (variantsRes && variantsRes.length > 0) {
-        const vCols = variantsRes[0].columns
-        variantsRes[0].values.forEach((vVals) => {
-          const variant = vCols.reduce(
-            (acc, col, i) => ({ ...acc, [col]: vVals[i] }),
-            {},
-          ) as Variant
-          variants.push(variant)
-        })
-      }
-
+      const variants = await variantRepository.findByProductId(product.id)
       const selectedVariant = variants[0] || null
       const price = product.base_price + (selectedVariant?.price_modifier || 0)
 

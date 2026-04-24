@@ -42,6 +42,7 @@ src/
 │   ├── configurator/   # 3D Configurator logic,  UI
 │   └── catalog/        # Product listing and search logic
 ├── hooks/              # Shared React hooks
+├── pages/              # Full-feature pages for routes
 ├── services/           # SQLite-Wasm initialization and DB drivers
 ├── store/              # Global state (Zustand stores)
 ├── types/              # Global TypeScript interfaces
