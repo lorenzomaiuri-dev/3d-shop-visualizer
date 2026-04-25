@@ -22,6 +22,7 @@ export function ConfigurableModel() {
           child.name === selectedVariant.target_mesh &&
           child.material instanceof THREE.MeshStandardMaterial
         ) {
+          child.material = child.material.clone()
           child.material.color.set(selectedVariant.color)
         }
 
@@ -31,5 +32,12 @@ export function ConfigurableModel() {
     })
   }, [scene, selectedVariant])
 
-  return <primitive object={scene} />
+  return (
+    <group
+      onClick={(e) => console.log('Model clicked in XR!', e)}
+      onPointerOver={(e) => console.log('Controller hovering model', e)}
+    >
+      <primitive object={scene} />
+    </group>
+  )
 }

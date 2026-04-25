@@ -17,6 +17,7 @@
     "@fontsource-variable/geist": "^5.2.8",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
+    "@react-three/xr": "^6.6.29",
     "@tailwindcss/vite": "^4.2.1",
     "@types/sql.js": "^1.4.9",
     "@types/three": "^0.183.1",
