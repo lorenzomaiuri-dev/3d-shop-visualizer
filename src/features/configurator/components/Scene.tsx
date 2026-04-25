@@ -1,6 +1,4 @@
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Stage } from '@react-three/drei'
-import { Suspense } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { ConfigurableModel } from './ConfigurableModel'
 import { XR, createXRStore } from '@react-three/xr'
@@ -36,18 +34,9 @@ const Scene = () => {
 
       <Canvas shadows camera={{ position: [0, 0, 5], fov: 45 }}>
         <XR store={store}>
-          <Suspense fallback={null}>
-            <Stage environment="city" intensity={0.5}>
-              <ConfigurableModel />
-            </Stage>
-          </Suspense>
-          <OrbitControls
-            makeDefault
-            enablePan={false}
-            enableZoom={false}
-            minPolarAngle={Math.PI / 3}
-            maxPolarAngle={Math.PI / 1.5}
-          />
+          <ambientLight intensity={1} />
+          <directionalLight position={[5, 5, 5]} intensity={2} />
+          <ConfigurableModel />
         </XR>
       </Canvas>
     </div>
