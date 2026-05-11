@@ -12,7 +12,7 @@ const store = createXRStore({
 
 const Scene = () => {
   return (
-    <div className="group relative">
+    <div className="group relative h-[600px] w-full overflow-hidden rounded-xl border bg-slate-50">
       <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
         <Badge
           variant="secondary"
