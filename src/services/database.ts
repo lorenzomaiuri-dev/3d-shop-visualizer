@@ -50,11 +50,14 @@ export const initDatabase = async () => {
 
     INSERT INTO products VALUES (1, 'Sneakers', 120.0, 'High-performance 3D sneakers', '/models/Shoe.glb', 'Footwear', 'https://images.unsplash.com/photo-1600269452121-4f2416e55c28');
     INSERT INTO products VALUES (2, 'Watch', 499.0, 'Sapphire crystal with mechanical movement', '/models/Watch.glb', 'Accessories', 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49');
-    INSERT INTO variants VALUES (1, 1, 'Classic White', '#ffffff', 0.0, 'Retopo_3DModel_mesh014');
-    INSERT INTO variants VALUES (2, 1, 'Cyber Punk', '#ff00ff', 15.0, 'Retopo_3DModel_mesh014');
-    INSERT INTO variants VALUES (3, 1, 'Deep Ocean', '#0000ff', 10.0, 'Retopo_3DModel_mesh014');
-    INSERT INTO variants VALUES (4, 2, 'Silver Steel', '#c0c0c0', 0.0, 'Bracelet');
-    INSERT INTO variants VALUES (5, 2, 'Gold Edition', '#ffd700', 150.0, 'Bracelet');
+    INSERT INTO products VALUES (3, 'Mouse', 99.0, 'Ergonomic wireless mouse', '/models/Mouse.glb', 'Accessories', 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7');
+    INSERT INTO variants VALUES (1, 1, 'Classic White', '#ffffff', 0.0, 'MainShoeMesh');
+    INSERT INTO variants VALUES (2, 1, 'Cyber Punk', '#ff00ff', 15.0, 'MainShoeMesh');
+    INSERT INTO variants VALUES (3, 1, 'Deep Ocean', '#0000ff', 10.0, 'MainShoeMesh');
+    INSERT INTO variants VALUES (4, 2, 'Silver Steel', '#c0c0c0', 0.0, 'BraceletMesh');
+    INSERT INTO variants VALUES (5, 2, 'Gold Edition', '#ffd700', 150.0, 'BraceletMesh');
+    INSERT INTO variants VALUES (6, 3, 'Black', '#000000', 0.0, 'MouseMesh');
+    INSERT INTO variants VALUES (7, 3, 'White', '#ffffff', 0.0, 'MouseMesh');
   `)
 
   return db
