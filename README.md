@@ -62,6 +62,17 @@ src/
 └── utils/              # Helper functions (formatters, constants)
 ```
 
+## 📄 Documentation
+
+| Document                                                             | Description                                                                    |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [Architecture — Runtime View](docs/ARCHITECTURE.md)                  | Sequence diagrams for startup, configurator, variant selection, and cart flows |
+| [ADR-0001 — SQLite-WASM](docs/adr/0001-sqlite-wasm-local-first.md)   | Why SQLite in the browser instead of a backend                                 |
+| [ADR-0002 — Zustand](docs/adr/0002-zustand-state-management.md)      | Why Zustand instead of Redux or React Context                                  |
+| [ADR-0003 — Repository pattern](docs/adr/0003-repository-pattern.md) | Why the repository + DI container abstraction                                  |
+
+---
+
 ## 💎 Code Quality & Development Workflow
 
 To maintain high professional standards, the project implements:
