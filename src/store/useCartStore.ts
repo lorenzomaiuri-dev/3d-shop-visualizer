@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { getContainer } from '../services/container'
+import { getDb } from '../services/database'
 import type { CartItem } from '../types/database'
 
 interface CartState {
@@ -25,6 +26,7 @@ export const useCartStore = create<CartState>((set, get) => ({
   error: null,
 
   fetchItems: async () => {
+    if (!getDb()) return
     set({ isLoading: true, error: null })
     try {
       const { cartRepository } = getContainer()

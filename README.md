@@ -15,6 +15,19 @@ This project was developed for the _Technologies for web applications_ course, f
 - **PBR Rendering**: High-fidelity materials (Physically Based Rendering) with environment mapping and post-processing effects.
 - **Responsive & Accessible UI**: A mobile-first interface built with Tailwind CSS and Framer Motion for fluid transitions.
 - **Zero-Latency Interactions**: Instant UI updates by querying the local database instead of awaiting network requests.
+- **AR/VR/XR Mode** _(Experimental)_: Immersive product preview via the **WebXR Device API**, powered by `@react-three/xr`.
+
+> ⚠️ **AR/VR/XR — Experimental Feature**
+>
+> The immersive AR mode relies on the [WebXR Device API](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API), which is still evolving and **not supported by all browsers or devices**.
+>
+> **Requirements:**
+>
+> - A [WebXR-compatible browser](https://caniuse.com/webxr) (Chrome for Android 79+, Samsung Internet, Meta Browser; desktop support is limited)
+> - A device with AR hardware support (ARCore on Android, or a VR headset)
+> - The page must be served over **HTTPS** (or `localhost`)
+>
+> On unsupported platforms the AR button will either be hidden or non-functional — the rest of the application works normally regardless.
 
 ---
 
@@ -48,6 +61,17 @@ src/
 ├── types/              # Global TypeScript interfaces
 └── utils/              # Helper functions (formatters, constants)
 ```
+
+## 📄 Documentation
+
+| Document                                                             | Description                                                                    |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [Architecture — Runtime View](docs/ARCHITECTURE.md)                  | Sequence diagrams for startup, configurator, variant selection, and cart flows |
+| [ADR-0001 — SQLite-WASM](docs/adr/0001-sqlite-wasm-local-first.md)   | Why SQLite in the browser instead of a backend                                 |
+| [ADR-0002 — Zustand](docs/adr/0002-zustand-state-management.md)      | Why Zustand instead of Redux or React Context                                  |
+| [ADR-0003 — Repository pattern](docs/adr/0003-repository-pattern.md) | Why the repository + DI container abstraction                                  |
+
+---
 
 ## 💎 Code Quality & Development Workflow
 
