@@ -7,6 +7,10 @@ vi.mock('../../services/container', () => ({
   getContainer: vi.fn(),
 }))
 
+vi.mock('../../services/database', () => ({
+  getDb: vi.fn().mockReturnValue({}),
+}))
+
 describe('useCartStore', () => {
   const mockCartRepository = {
     findAll: vi.fn(),
